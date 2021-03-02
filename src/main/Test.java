@@ -1,12 +1,12 @@
 package main;
 
+import java.util.List;
+
 public class Test {
 
 
     public static void main(String[] args) {
-
-
-
-        String result = AdbTools.getInstance().execTWRPBackup("D:\\英雄时刻","6df08fd6");
+        List<DeviceBean> deviceBeanList = AdbTools.getInstance().getDeviceList();
+        int deviceCount = deviceBeanList.size();
     }
 }
