@@ -10,7 +10,7 @@ public class LogUtils {
 
 
     public static void ERROR(String text) {
-        print(ERROR_TAB,text);
+        print(ERROR_TAB,"\033[31m"+text);
     }
 
     public static void DEBUG(String text) {

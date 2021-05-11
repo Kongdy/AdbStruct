@@ -125,59 +125,61 @@ public class AdbTools {
             LogUtils.ERROR("execTWRPBackup dstDirectoryPath is empty");
             return null;
         }
-        try {
-            File dstFile = null;
+//        try {
+//            File dstFile = null;
             File file = new File(dstDirectoryPath);
             if(!file.exists()) {
                 //noinspection ResultOfMethodCallIgnored
                 file.mkdirs();
             }
-            if(file.isFile()) {
-                dstFile = file;
-                if(!dstFile.exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    dstFile.createNewFile();
-                }
-            } else if(file.isDirectory()) {
-                String dstFilePath = file.getAbsolutePath()+File.separator+deviceId+"_backUp.ab";
-                dstFile = new File(dstFilePath);
-                //noinspection ResultOfMethodCallIgnored
-                dstFile.createNewFile();
-            }
+//            if(file.isFile()) {
+//                dstFile = file;
+//                if(!dstFile.exists()) {
+//                    //noinspection ResultOfMethodCallIgnored
+//                    dstFile.createNewFile();
+//                }
+//            }
+//            else if(file.isDirectory()) {
+//                String dstFilePath = file.getAbsolutePath()+File.separator+deviceId+"_backUp.ab";
+//                dstFile = new File(dstFilePath);
+//                //noinspection ResultOfMethodCallIgnored
+//                dstFile.createNewFile();
+//            }
 
-            if(null == dstFile) {
-                LogUtils.ERROR("create backup file failed,deviceId:"+deviceId);
-                return null;
-            }
+//            if(null == dstFile) {
+//                LogUtils.ERROR("create backup file failed,deviceId:"+deviceId);
+//                return null;
+//            }
 
-            String command = "adb -s "+deviceId+" backup -f "+dstFile.getAbsolutePath()+ " --twrp -all";
+            String command = "adb -s "+deviceId+" backup -f "+file.getAbsolutePath()+ " --twrp -all";
 //            String command = "adb -s "+deviceId+" backup -f "+dstFile.getAbsolutePath()+ " -all";
             return executeCommand(command);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
     }
 
 
     /**
      * do twrp restore
-     * @param dstDirectoryPath ab file absolute path
+     * @param backUpFile ab file absolute path
      * @param deviceId deviceId
      * @return cmd exec callback
      */
-    public String execTWRPRestore(String dstDirectoryPath,String deviceId) {
+    public String execTWRPRestore(String backUpFile,String deviceId) {
         if(TextTools.isEmpty(deviceId)) {
             LogUtils.ERROR("execTWRPRestore deviceId is empty");
             return null;
         }
-        if(TextTools.isEmpty(dstDirectoryPath)) {
-            LogUtils.ERROR("execTWRPRestore dstDirectoryPath is empty");
+        if(TextTools.isEmpty(backUpFile)) {
+            LogUtils.ERROR("execTWRPRestore backUpFile is empty");
             return null;
         }
 
-        File file = new File(dstDirectoryPath+File.separator+deviceId+"_backUp.ab");
+        //File file = new File(backUpFile+File.separator+"1.ab");
+        File file = new File(backUpFile);
         if(!file.exists()) {
             LogUtils.ERROR("deviceId:"+deviceId+",backUp not exists");
             return null;
@@ -204,10 +206,10 @@ public class AdbTools {
 
         rebootLoader(deviceId);
         try {
-            // wait 10 seconds
-            Thread.sleep(10 * 1000);
+            // wait 15 seconds
+            Thread.sleep(15 * 1000);
             // wait device
-            waitForDeviceAdbConnect(deviceId);
+            waitForDeviceFastbootConnect(deviceId);
             // device connect suc
             String bootCommand = "fastboot flash recovery "+twrpImgPath;
             return executeCommand(bootCommand);
@@ -259,6 +261,20 @@ public class AdbTools {
             return null;
         }
         String command = "adb -s "+deviceId+" wait-for-device";
+        return executeCommand(command);
+    }
+
+    /**
+     * wait for device fastboot connect
+     * @param deviceId deviceId
+     * @return nothing
+     */
+    public String waitForDeviceFastbootConnect(String deviceId) {
+        if(TextTools.isEmpty(deviceId)) {
+            LogUtils.ERROR("waitForDeviceFastbootConnect deviceId is empty");
+            return null;
+        }
+        String command = "fastboot -s "+deviceId+" wait-for-device";
         return executeCommand(command);
     }
 
