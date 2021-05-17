@@ -11,7 +11,7 @@ import java.util.List;
 public class AdbScriptManager {
 
     private final List<DeviceBean> deviceBeanList = new ArrayList<>();
-    private static final String AUTOMATOR_SCRIPT_PATH = "assets\\test(1).py";
+    private static final String AUTOMATOR_SCRIPT_PATH = "assets\\test.py";
     private final String ip = "http://127.0.0.1:5000/";
 
     private static AdbScriptManager _instance;
