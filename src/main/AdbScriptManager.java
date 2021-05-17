@@ -67,6 +67,7 @@ public class AdbScriptManager {
                 return result.toString();
             }
 
+            LogUtils.DEBUG("request get url:"+requestUrl);
             HttpURLConnection urlConnection = (HttpURLConnection) requestUrl.openConnection();
             in = handleGet(urlConnection);
             if(null == in) {

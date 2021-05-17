@@ -13,9 +13,9 @@ public class Starter {
     private static void showChooseDeviceMode(List<DeviceBean> deviceBeanList) {
         LogUtils.DEBUG("device list:");
         LogUtils.DEBUG("****************************\n");
-        for(int i = 0;i < deviceBeanList.size();i++) {
-            String deviceOutput = (i + 1)+"."+deviceBeanList.get(i).getDeviceId();
-            if(i == deviceBeanList.size() -1 ) {
+        for (int i = 0; i < deviceBeanList.size(); i++) {
+            String deviceOutput = (i + 1) + "." + deviceBeanList.get(i).getDeviceId();
+            if (i == deviceBeanList.size() - 1) {
                 deviceOutput += "\n";
             }
             LogUtils.DEBUG(deviceOutput);
@@ -25,8 +25,7 @@ public class Starter {
 
         Scanner scanner = new Scanner(System.in);
         int index = scanner.nextInt();
-        scanner.close();
-        if(index > 0 && index <= deviceBeanList.size()) {
+        if (index > 0 && index <= deviceBeanList.size()) {
             DeviceBean dstDevice = deviceBeanList.get(index - 1);
             showHomeMode(dstDevice);
         } else {
@@ -44,7 +43,6 @@ public class Starter {
 
         Scanner scanner = new Scanner(System.in);
         int index = scanner.nextInt();
-        scanner.close();
         switch (index) {
             case 0:
                 System.exit(0);
@@ -80,7 +78,6 @@ public class Starter {
         Scanner scanner = new Scanner(System.in);
 
         int index = scanner.nextInt();
-        scanner.close();
         switch (index) {
             case 1:
                 AdbTools.getInstance().rebootDevice(dstDevice.getDeviceId());
@@ -109,7 +106,7 @@ public class Starter {
                 break;
             case 7:
                 AdbTools.getInstance().waitForDeviceAdbConnect(dstDevice.getDeviceId());
-                LogUtils.DEBUG("wait "+dstDevice.getDeviceId()+" success,back to function choose mode");
+                LogUtils.DEBUG("wait " + dstDevice.getDeviceId() + " success,back to function choose mode");
                 showChooseDeviceMode(AdbTools.getInstance().getDeviceList());
                 break;
             case 8:
@@ -130,8 +127,7 @@ public class Starter {
         Scanner scanner = new Scanner(System.in);
 
         String imgPath = scanner.nextLine();
-        scanner.close();
-        if(TextTools.isEmpty(imgPath)) {
+        if (TextTools.isEmpty(imgPath)) {
             LogUtils.ERROR("imgPath files is empty please try again");
             bootTWRPImg(dstDevice);
             return;
@@ -147,14 +143,12 @@ public class Starter {
         String backUpDirectory = scanner.nextLine();
         int backFlag = scanner.nextInt();
 
-        scanner.close();
-
-        if(backFlag == 1) {
+        if (backFlag == 1) {
             showChooseFunctionMode(dstDevice);
             return;
         }
 
-        if(TextTools.isEmpty(backUpDirectory)) {
+        if (TextTools.isEmpty(backUpDirectory)) {
             LogUtils.ERROR("directory is empty please try again");
             handleTWRPRestore(dstDevice);
             return;
@@ -162,13 +156,13 @@ public class Starter {
 
         File backUpDirectoryFile = new File(backUpDirectory);
 
-        if(!backUpDirectoryFile.exists()) {
+        if (!backUpDirectoryFile.exists()) {
             LogUtils.ERROR("back up directory is not exits,please try again");
             handleTWRPRestore(dstDevice);
             return;
         }
 
-        if(!backUpDirectoryFile.isDirectory()) {
+        if (!backUpDirectoryFile.isDirectory()) {
             LogUtils.ERROR("back up directory is not a directory,please try again");
             handleTWRPRestore(dstDevice);
             return;
@@ -176,7 +170,7 @@ public class Starter {
 
         File[] files = backUpDirectoryFile.listFiles();
 
-        if(null == files) {
+        if (null == files) {
             LogUtils.ERROR("back up directory is empty,please try again");
             handleTWRPRestore(dstDevice);
             return;
@@ -188,11 +182,11 @@ public class Starter {
         try {
             Thread.sleep(15 * 1000);
             AdbTools.getInstance().waitForDeviceFastbootConnect(dstDevice.getDeviceId());
-            for(File file:files) {
-                LogUtils.DEBUG("restore file:"+file.getName());
+            for (File file : files) {
+                LogUtils.DEBUG("restore file:" + file.getName());
                 AdbTools.getInstance().execTWRPRestore(file.getAbsolutePath(), dstDevice.getDeviceId());
                 LogUtils.DEBUG("restore suc,waiting next...");
-                Thread.sleep(10*1000);
+                Thread.sleep(10 * 1000);
             }
             AdbTools.getInstance().rebootDevice(dstDevice.getDeviceId());
             LogUtils.DEBUG("device is rebooting,wait device on line");
@@ -206,7 +200,7 @@ public class Starter {
     private static void handleTWRPBackUp(DeviceBean dstDevice) {
         File fileHome = new File(AdbTools.getInstance().getClass().getResource("/").getPath());
 
-        File deviceBackUpHome = new File(fileHome.getAbsolutePath()+File.separator+dstDevice.getDeviceId());
+        File deviceBackUpHome = new File(fileHome.getAbsolutePath() + File.separator + dstDevice.getDeviceId());
 
         AdbTools.getInstance().execTWRPBackup(deviceBackUpHome.getAbsolutePath(), dstDevice.getDeviceId());
     }
@@ -222,8 +216,6 @@ public class Starter {
         Scanner scanner = new Scanner(System.in);
 
         int index = scanner.nextInt();
-
-        scanner.close();
 
         switch (index) {
             case 0:
@@ -248,39 +240,25 @@ public class Starter {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.CHINA);
 
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         String oneLevel1FileHome = year + "-" + month + "-" + day;
 
-        File publishFileLevel3Directory = new File(fileHome.getAbsolutePath()+File.separator+oneLevel1FileHome+File.separator+dstDevice.getDeviceId());
+        File publishFileLevel3Directory = new File(fileHome.getAbsolutePath() + File.separator + oneLevel1FileHome + File.separator + dstDevice.getDeviceId());
 
-        if(!publishFileLevel3Directory.exists()) {
+        if (!publishFileLevel3Directory.exists()) {
             LogUtils.ERROR("publish file not found! please check publish directory!");
             showScriptMode(dstDevice);
             return;
         }
 
-        File[] pictureFiles = publishFileLevel3Directory.listFiles();
+        LogUtils.INFO("start publishing...");
 
-        if(null == pictureFiles) {
-            LogUtils.ERROR("pictureFiles not found! please check publish directory!");
-            showScriptMode(dstDevice);
-            return;
-        }
+        AdbScriptManager.getInstance().execGetRequest("/postmes", "device=" + dstDevice.getDeviceId(), "path=" + publishFileLevel3Directory.getAbsolutePath());
 
-        try {
-            for(File publishFile : pictureFiles) {
-                AdbScriptManager.getInstance().execGetRequest("/postmes","device="+dstDevice.getDeviceId(),"path="+publishFile.getAbsolutePath());
-                LogUtils.INFO(publishFile.getName()+"publish done,wait 10 seconds for the next one");
-                Thread.sleep(10*1000);
-            }
-
-            LogUtils.INFO("all publish done!!! back to script choose mode");
-            showScriptMode(dstDevice);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        LogUtils.INFO("all publish done!!! back to script choose mode");
+        showScriptMode(dstDevice);
 
     }
 }

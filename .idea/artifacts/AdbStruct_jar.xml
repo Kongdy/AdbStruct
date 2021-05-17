@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AdbStruct:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AdbStruct_jar</output-path>
+    <root id="archive" name="AdbStruct.jar">
+      <element id="module-output" name="AdbStruct" />
+    </root>
+  </artifact>
+</component>
