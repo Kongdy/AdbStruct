@@ -235,7 +235,7 @@ public class Starter {
     }
 
     private static void autoPublish(DeviceBean dstDevice) {
-        File fileHome = new File(AdbTools.getInstance().getClass().getResource("/").getPath());
+        File fileHome = new File(AdbTools.getInstance().getClass().getResource("").getPath());
 
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.CHINA);
 
@@ -245,7 +245,7 @@ public class Starter {
 
         String oneLevel1FileHome = year + "-" + month + "-" + day;
 
-        File publishFileLevel3Directory = new File(fileHome.getAbsolutePath() + File.separator + oneLevel1FileHome + File.separator + dstDevice.getDeviceId());
+        File publishFileLevel3Directory = new File(fileHome.getParentFile().getParent().replace("file:\\","")  + File.separator + oneLevel1FileHome + File.separator + dstDevice.getDeviceId());
 
         if (!publishFileLevel3Directory.exists()) {
             LogUtils.ERROR("publish file not found! please check publish directory!");

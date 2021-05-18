@@ -32,7 +32,8 @@ public class AdbScriptManager {
         deviceBeanList.addAll(AdbTools.getInstance().getDeviceList());
 
         File projectFile = new File(this.getClass().getResource("").getPath());
-        String automatorScriptAbsolutePath = projectFile.getParent() + File.separator + AUTOMATOR_SCRIPT_PATH;
+        String automatorScriptAbsolutePath = projectFile.getParentFile().getParent().replace("file:\\","") + File.separator + AUTOMATOR_SCRIPT_PATH;
+        LogUtils.DEBUG("automatorScriptAbsolutePath:"+automatorScriptAbsolutePath);
 
         try {
             Runtime.getRuntime().exec("cmd /c start " + automatorScriptAbsolutePath);

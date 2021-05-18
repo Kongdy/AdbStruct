@@ -10,11 +10,13 @@ public class LogUtils {
 
 
     public static void ERROR(String text) {
-        print(ERROR_TAB,"\\033[31m"+text+"\033[0m");
+//        print(ERROR_TAB,"\\033[31m"+text+"\033[0m");
+        print(ERROR_TAB,text);
     }
 
     public static void DEBUG(String text) {
-        print(DEBUG_TAB,"\033[34m"+text+"\033[0m");
+//        print(DEBUG_TAB,"\033[34m"+text+"\033[0m");
+        print(DEBUG_TAB,text);
     }
 
     public static void INFO(String text) {
@@ -22,7 +24,8 @@ public class LogUtils {
     }
 
     public static void WARNING(String text) {
-        print(WARNING_TAB,"\033[33m"+text+"\033[0m");
+//        print(WARNING_TAB,"\033[33m"+text+"\033[0m");
+        print(WARNING_TAB,text);
     }
 
     private static void print(String tab,String text) {

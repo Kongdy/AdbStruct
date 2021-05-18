@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +16,13 @@ public class AdbTools {
     private static final String FASTBOOT_RELATIVE_PATH = "adb\\fastboot.exe";
 
     private AdbTools() {
-        File adbFile = new File(this.getClass().getResource("").getPath());
-        ADB_ABSOLUTE_PATH = adbFile.getParent() + File.separator + ADB_RELATIVE_PATH;
+            URL url = this.getClass().getResource("");
+            File projectFile = new File(url.getPath());
+            ADB_ABSOLUTE_PATH = projectFile.getParentFile().getParent().replace("file:\\","") + File.separator + ADB_RELATIVE_PATH;
 
-        FASTBOOT_ABSOLUTE_PATH = adbFile.getParent() + File.separator + FASTBOOT_RELATIVE_PATH;
+            LogUtils.DEBUG("ADB_ABSOLUTE_PATH:"+ADB_ABSOLUTE_PATH);
+            FASTBOOT_ABSOLUTE_PATH = projectFile.getParentFile().getParent().replace("file:\\","") + File.separator + FASTBOOT_RELATIVE_PATH;
+            LogUtils.DEBUG("FASTBOOT_ABSOLUTE_PATH:"+FASTBOOT_ABSOLUTE_PATH);
     }
 
     public static AdbTools getInstance() {
@@ -28,8 +33,8 @@ public class AdbTools {
     }
 
     /* instance start **/
-    private final String ADB_ABSOLUTE_PATH;
-    private final String FASTBOOT_ABSOLUTE_PATH;
+    private String ADB_ABSOLUTE_PATH;
+    private String FASTBOOT_ABSOLUTE_PATH;
 
     /**
      * execute adb command
@@ -46,8 +51,8 @@ public class AdbTools {
         commandStr = commandStr.replace("adb", ADB_ABSOLUTE_PATH);
         commandStr = commandStr.replace("fastboot", FASTBOOT_ABSOLUTE_PATH);
         try {
+            LogUtils.INFO("execute command:" + commandStr);
             Process process = Runtime.getRuntime().exec(commandStr);
-            LogUtils.INFO("execute command:" + orgStr);
             //handle result
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "gbk"));
             String line;
