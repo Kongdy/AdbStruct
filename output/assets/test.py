@@ -69,7 +69,7 @@ def postMes():
         if not os.path.isdir(filePath):
             pushFile(deviceId, file, filePath)
             fileList.append(file)
-    d.wakeup()
+    #d.wakeup()
     openApp(d, deviceId)
     waitAndClick(d, 'com.xingin.xhs:id/bo5')
     d(resourceId = 'com.xingin.xhs:id/bq8').wait.exists(timeout = 10000)
