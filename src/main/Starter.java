@@ -141,9 +141,8 @@ public class Starter {
         Scanner scanner = new Scanner(System.in);
 
         String backUpDirectory = scanner.nextLine();
-        int backFlag = scanner.nextInt();
 
-        if (backFlag == 1) {
+        if (TextTools.equals(backUpDirectory,"1")) {
             showChooseFunctionMode(dstDevice);
             return;
         }
